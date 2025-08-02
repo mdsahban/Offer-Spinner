@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delhi Collection</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <div class="spin2win-container">
+    <div class="branding" style="background:none;padding-bottom:0;">
+      <div class="branding-title">Delhi Collection</div>
+      <div class="branding-subtitle">Spin and Win – Only for ₹1500+ purchasing</div>
+    </div>
+    <div class="spin2win-pointer">
+      <svg width="48" height="48">
+        <circle cx="24" cy="16" r="16" fill="#b6e07d" stroke="#fff" stroke-width="4"/>
+        <polygon points="12,32 24,48 36,32" fill="#b6e07d" stroke="#888" stroke-width="2"/>
+        <circle cx="24" cy="16" r="6" fill="#222"/>
+      </svg>
+    </div>
+    <div class="spin2win-wheel-area">
+      <svg id="spinner-svg" class="spin2win-wheel" width="300" height="300" viewBox="0 0 300 300"></svg>
+      <div class="spin2win-center">
+        <div class="spin2win-center-text"><em>Spin &amp; Win</em></div>
+      </div>
+    </div>
+    <!-- User Info Modal -->
+    <div id="user-info-modal" class="spin2win-modal" style="display:flex;z-index:2000;">
+      <div class="spin2win-modal-content" style="min-width:260px;max-width:90vw;text-align:center;">
+        <div style="font-size:1.3rem;font-weight:700;margin-bottom:1.2rem;">Enter Your Details</div>
+        <form id="user-info-form" autocomplete="off">
+          <input id="name-input" type="text" placeholder="Enter your name" style="padding:0.7rem 1.2rem;font-size:1.1rem;border-radius:2rem;border:1.5px solid #ccc;outline:none;width:80%;max-width:260px;margin-bottom:0.7rem;" required>
+          <br>
+          <input id="mobile-input" type="tel" pattern="[0-9]{10,15}" maxlength="15" placeholder="Enter mobile number" style="padding:0.7rem 1.2rem;font-size:1.1rem;border-radius:2rem;border:1.5px solid #ccc;outline:none;width:80%;max-width:260px;" required>
+          <div id="user-info-msg" style="color:#e4405f;font-size:1rem;margin-top:0.5rem;min-height:1.2em;"></div>
+          <button type="submit" class="spin2win-btn" style="margin-top:1.2rem;width:80%;max-width:260px;">Continue</button>
+        </form>
+      </div>
+    </div>
+    <!-- Expired Modal -->
+    <div id="expired-modal" class="spin2win-modal" style="display:none;z-index:3000;">
+      <div class="spin2win-modal-content" style="min-width:260px;max-width:90vw;text-align:center;">
+        <div style="font-size:1.5rem;font-weight:900;color:#e4405f;margin-bottom:1.2rem;">Offer Expired or Limit Reached</div>
+        <div style="font-size:1.1rem;color:#232c4b;">Sorry, this offer is no longer available.</div>
+      </div>
+    </div>
+    <button id="spin-btn" class="spin2win-btn">SPIN</button>
+    <!-- Popup Modal for Result -->
+    <div id="result-modal" class="spin2win-modal" style="display:none;">
+      <div class="spin2win-modal-content">
+        <span class="popup-bg-symbol">✨</span>
+        <div class="popup-emoji">🎉</div>
+        <div id="result" class="spin2win-result"></div>
+      </div>
+    </div>
+    <div class="social-row social-row-bottom">
+      <a href="https://facebook.com/delhi_collection_1" target="_blank" class="social-btn social-btn-bw social-facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://www.youtube.com/@DelhiCollection_1" target="_blank" class="social-btn social-btn-bw social-youtube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://api.whatsapp.com/send?phone=919870203840&text=Hiiii%F0%9F%91%8B" target="_blank" class="social-btn social-btn-bw social-whatsapp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <a href="https://instagram.com/delhi_collection_1" target="_blank" class="social-btn social-btn-bw social-instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="script.js"></script>
+  <div id="confetti-overlay"></div>
+</body>
+</html> 
