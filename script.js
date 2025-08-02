@@ -1,10 +1,10 @@
 const offers = [
   "T-Shirt",
-  "Shirt",
+  "Surprise gift",
   "Socks",
   "100₹ off",
   "10% off",
-  "Surprise gift"
+  "Shirt"
 ];
 
 const colors = [
@@ -171,6 +171,7 @@ function checkSpinCountAndUpdateUI(mobile) {
   });
 }
 
+// Restore authentication and spin limits
 window.addEventListener('DOMContentLoaded', function() {
   if (userInfoModal) {
     userInfoModal.style.display = 'flex';
@@ -208,23 +209,28 @@ if (userInfoForm) {
         // Now check if this number has already spun
         db.ref('spins/' + userMobile).once('value').then(function(snapshot2) {
           userSpinCount = snapshot2.val() || 0;
-          if (userSpinCount >= 1) {
+          if (userSpinCount && userSpinCount.result) {
             setSpinUI(false, '');
             userInfoModal.style.display = 'none';
             if (expiredModal) expiredModal.style.display = 'flex';
           } else {
             setSpinUI(true, '');
             userInfoModal.style.display = 'none';
+            spinBtn.disabled = false;
+            spinBtn.style.opacity = 1;
+            spinBtn.style.cursor = 'pointer';
           }
         });
       });
     } else {
       userInfoModal.style.display = 'none';
+      spinBtn.disabled = false;
+      spinBtn.style.opacity = 1;
+      spinBtn.style.cursor = 'pointer';
     }
   });
 }
 
-// Intercept spin button click
 spinBtn.addEventListener('click', function(e) {
   if (!userName || !validateName(userName)) {
     setSpinUI(false, 'Enter a valid name (letters/spaces, 2-30 chars)');
@@ -236,7 +242,7 @@ spinBtn.addEventListener('click', function(e) {
     userInfoModal.style.display = 'flex';
     return;
   }
-  if (userSpinCount >= 1) {
+  if (userSpinCount && userSpinCount.result) {
     setSpinUI(false, '');
     userInfoModal.style.display = 'none';
     if (expiredModal) expiredModal.style.display = 'flex';
@@ -254,36 +260,35 @@ spinBtn.addEventListener('click', function(e) {
       }
       db.ref('spins/' + userMobile).once('value').then(function(snapshot2) {
         let spins = snapshot2.val() || 0;
-        if (spins >= 1) {
+        if (spins && spins.result) {
           setSpinUI(false, '');
           userInfoModal.style.display = 'none';
           if (expiredModal) expiredModal.style.display = 'flex';
           return;
         }
-        // --- Call the original spin function here after validation ---
-        // (The rest of the spin logic will proceed)
-        // Set spin count to 1 in Firebase (only one spin allowed)
-        db.ref('spins/' + userMobile).set(1);
-        userSpinCount = 1;
-        // Allow the original spin logic to run
         proceedWithSpin();
-        // Disable spin button after spin
         setSpinUI(false, 'Offer Expired or Limit Reached');
+        spinBtn.disabled = true;
+        spinBtn.style.opacity = 0.6;
+        spinBtn.style.cursor = 'not-allowed';
       });
     });
     e.preventDefault();
   }
 });
 
-// Wrap the original spin logic in a function
+// In proceedWithSpin, force the result to be either '10% off' or 'Surprise gift' and stop the wheel at the correct segment
 function proceedWithSpin() {
-  // --- ORIGINAL SPIN LOGIC BELOW (copied from previous spinBtn click handler) ---
   if (spinning) return;
   spinning = true;
   resultDiv.textContent = '';
   resultDiv.classList.remove('scale-animate');
   if (resultModal) resultModal.style.display = 'none';
-  const selected = Math.floor(Math.random() * segCount);
+  // Force the result
+  const forcedResults = ["10% off", "Surprise gift"];
+  const forcedResult = forcedResults[Math.floor(Math.random() * forcedResults.length)];
+  // Find the index of the forced result in the offers array
+  const selected = offers.findIndex(o => o === forcedResult);
   const extraSpins = 5;
   const finalDeg = 360 * extraSpins + (360 - selected * segAngle - segAngle / 2);
   svg.style.transition = 'transform 3s cubic-bezier(.17,.67,.83,.67)';
@@ -293,7 +298,7 @@ function proceedWithSpin() {
     currentRotation = finalDeg % 360;
     svg.style.transition = 'none';
     svg.style.transform = `rotate(${currentRotation}deg)`;
-    resultDiv.innerHTML = `<div style='font-size:1.2rem;color:#222;margin-bottom:0.5rem;'>You won:</div><div style='font-size:2.3rem;font-weight:900;'>${offers[selected].replace(/\n/g, ' ')}</div>`;
+    resultDiv.innerHTML = `<div style='font-size:1.2rem;color:#222;margin-bottom:0.5rem;'>You won:</div><div style='font-size:2.3rem;font-weight:900;'>${forcedResult}</div>`;
     resultDiv.classList.add('scale-animate');
     setTimeout(() => resultDiv.classList.remove('scale-animate'), 1200);
     setTimeout(() => {
@@ -303,6 +308,13 @@ function proceedWithSpin() {
         resultModal.style.display = 'flex';
       }
     }, 600);
+    // Store name and result in Firebase after spin
+    if (db && userMobile && userName) {
+      db.ref('spins/' + userMobile).set({
+        name: userName,
+        result: forcedResult
+      });
+    }
   }, 3000);
 }
 

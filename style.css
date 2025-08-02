@@ -461,7 +461,13 @@ body {
     min-height: 1.5rem;
   }
   .branding-title {
-    font-size: 1.2rem;
+    font-size: 2.3rem;
+    font-weight: 1000;
+    color: #232c4b;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 18px #232c4b33, 0 2px 12px #ffe06666, 0 1px 0 #fff;
+    margin-bottom: 0.3rem;
+    line-height: 1.1;
   }
   .branding-subtitle {
     font-size: 0.9rem;
